@@ -7,14 +7,40 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MainLayout(routeName: 'Home Screen', children: [
-      ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) => RouteOneScreen(),
-            ));
-          },
-          child: const Text('Push')),
-    ]);
+    // 안드로이드에서 뒤로가기 버튼 작동 막기
+    return WillPopScope(
+      onWillPop: () async {
+        // true: pop 가능
+        // false: pop 불가능
+        final canPop = Navigator.of(context).canPop();
+        return canPop;
+      },
+      child: MainLayout(routeName: 'Home Screen', children: [
+        ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => RouteOneScreen(
+                  number: 123,
+                ),
+              ));
+            },
+            child: const Text('Push')),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Pop')),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).maybePop();
+            },
+            child: Text('maybePop')),
+        ElevatedButton(
+            onPressed: () {
+              print(Navigator.of(context).canPop());
+            },
+            child: Text('canPop')),
+      ]),
+    );
   }
 }
